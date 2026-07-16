@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your PLAKA Gift</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --green-dark: #2C3E2D;
+    --green-mid: #4A6741;
+    --green-light: #A9B4A4;
+    --sage: #A19B85;
+    --parchment: #E5DAD0;
+    --parchment-light: #F5EDD8;
+    --terracotta: #AE572F;
+    --stone: #747663;
+    --white: #FFFFFF;
+    --text-dark: #1a1a1a;
+    --text-mid: #4a4a4a;
+    --text-muted: #7a7a7a;
+  }
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    background: var(--parchment-light);
+    color: var(--text-dark);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px 16px 48px;
+  }
+  .logo {
+    font-family: Georgia, serif;
+    font-size: 22px;
+    letter-spacing: 0.25em;
+    color: var(--green-dark);
+    text-align: center;
+    margin-bottom: 32px;
+    margin-top: 8px;
+  }
+  .card {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 36px 32px;
+    max-width: 480px;
+    width: 100%;
+    box-shadow: 0 2px 16px rgba(44,62,45,0.08);
+  }
+  .step { display: none; }
+  .step.active { display: block; }
+  h2 { font-size: 22px; color: var(--green-dark); margin-bottom: 12px; font-weight: normal; line-height: 1.3; }
+  p { font-size: 15px; color: var(--text-mid); line-height: 1.7; margin-bottom: 20px; font-family: Arial, sans-serif; }
+  .divider { width: 48px; height: 2px; background: var(--terracotta); margin: 16px 0 20px; }
+  input[type="email"] {
+    width: 100%; padding: 14px 16px; border: 1.5px solid var(--parchment);
+    border-radius: 8px; font-size: 15px; font-family: Arial, sans-serif;
+    color: var(--text-dark); background: var(--parchment-light); outline: none;
+    transition: border-color 0.2s; margin-bottom: 16px;
+  }
+  input[type="email"]:focus { border-color: var(--green-mid); }
+  .btn-primary {
+    width: 100%; padding: 15px; background: var(--green-dark); color: var(--parchment-light);
+    border: none; border-radius: 8px; font-size: 15px; font-family: Arial, sans-serif;
+    cursor: pointer; letter-spacing: 0.04em; transition: background 0.2s;
+  }
+  .btn-primary:hover { background: var(--green-mid); }
+  .stars { display: flex; gap: 10px; justify-content: center; margin: 24px 0; }
+  .star { font-size: 44px; cursor: pointer; color: #ddd; transition: color 0.15s; user-select: none; }
+  .star.active { color: var(--terracotta); }
+  .tag-group-label { font-size: 11px; letter-spacing: 0.1em; color: var(--sage); font-family: Arial, sans-serif; margin: 16px 0 8px; text-transform: uppercase; }
+  .tags-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 4px; }
+  .tag {
+    padding: 10px 14px; border: 1.5px solid var(--parchment); border-radius: 8px;
+    font-size: 13px; font-family: Arial, sans-serif; cursor: pointer; text-align: center;
+    color: var(--text-mid); background: var(--parchment-light); transition: all 0.15s; user-select: none;
+  }
+  .tag.selected { border-color: var(--green-dark); background: var(--green-dark); color: var(--parchment-light); }
+  .review-box {
+    background: var(--parchment-light); border: 1.5px solid var(--parchment); border-radius: 8px;
+    padding: 16px; font-size: 14px; font-family: Arial, sans-serif; color: var(--text-mid);
+    line-height: 1.7; min-height: 100px; margin: 16px 0; white-space: pre-wrap;
+  }
+  .copy-btn {
+    width: 100%; padding: 12px; background: var(--parchment); color: var(--green-dark);
+    border: 1.5px solid var(--green-light); border-radius: 8px; font-size: 14px;
+    font-family: Arial, sans-serif; cursor: pointer; margin-bottom: 12px; transition: all 0.2s;
+  }
+  .copy-btn:hover { background: var(--green-light); }
+  .amazon-btn {
+    width: 100%; padding: 15px; background: var(--terracotta); color: var(--white);
+    border: none; border-radius: 8px; font-size: 15px; font-family: Arial, sans-serif;
+    cursor: pointer; letter-spacing: 0.04em; transition: background 0.2s;
+    display: block; text-align: center; text-decoration: none;
+  }
+  .amazon-btn:hover { background: #8f4420; }
+  .cookbook-btn {
+    width: 100%; padding: 15px; background: var(--green-dark); color: var(--parchment-light);
+    border: none; border-radius: 8px; font-size: 15px; font-family: Arial, sans-serif;
+    cursor: pointer; letter-spacing: 0.04em; transition: background 0.2s;
+    text-decoration: none; display: block; text-align: center; margin-top: 16px;
+  }
+  .cookbook-btn:hover { background: var(--green-mid); }
+  .error-msg { color: var(--terracotta); font-size: 13px; font-family: Arial, sans-serif; margin-top: 8px; display: none; }
+  .small-note { font-size: 12px; color: var(--text-muted); font-family: Arial, sans-serif; text-align: center; margin-top: 16px; line-height: 1.5; }
+  .progress { display: flex; justify-content: center; gap: 6px; margin-bottom: 28px; }
+  .progress-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--parchment); transition: background 0.2s; }
+  .progress-dot.active { background: var(--green-dark); }
+  .progress-dot.done { background: var(--green-light); }
+  .loading { text-align: center; padding: 20px 0; color: var(--text-muted); font-family: Arial, sans-serif; font-size: 14px; }
+</style>
+</head>
+<body>
+
+<div class="logo">P L A K A</div>
+
+<div class="card">
+  <div class="progress" id="progress">
+    <div class="progress-dot active" id="dot-1"></div>
+    <div class="progress-dot" id="dot-2"></div>
+    <div class="progress-dot" id="dot-3"></div>
+    <div class="progress-dot" id="dot-4"></div>
+  </div>
+
+  <!-- STEP 1: Email -->
+  <div class="step active" id="step-1">
+    <h2>Welcome to the PLAKA family.</h2>
+    <div class="divider"></div>
+    <p>Thank you for bringing PLAKA into your kitchen. This board was made to be used, marked, and loved — just like the best recipes.</p>
+    <p>We prepared a gift for you: a complimentary copy of <strong>PLAKA's Mediterranean Kitchen</strong> cookbook. Enter your email and we'll send it right over.</p>
+    <input type="email" id="email-input" placeholder="your@email.com" />
+    <div class="error-msg" id="email-error">Please enter a valid email address.</div>
+    <button class="btn-primary" onclick="submitEmail()">Get My Free Cookbook</button>
+    <p class="small-note">No spam, ever. Just your cookbook and occasional Mediterranean inspiration.</p>
+  </div>
+
+  <!-- STEP 2: Rating -->
+  <div class="step" id="step-2">
+    <h2>How would you rate your PLAKA board?</h2>
+    <div class="divider"></div>
+    <p>Your honest experience helps us keep improving.</p>
+    <div class="stars">
+      <span class="star" onclick="setRating(1)">★</span>
+      <span class="star" onclick="setRating(2)">★</span>
+      <span class="star" onclick="setRating(3)">★</span>
+      <span class="star" onclick="setRating(4)">★</span>
+      <span class="star" onclick="setRating(5)">★</span>
+    </div>
+    <div class="error-msg" id="rating-error">Please select a rating to continue.</div>
+  </div>
+
+  <!-- STEP 3: Tags -->
+  <div class="step" id="step-3">
+    <h2>What stood out most?</h2>
+    <div class="divider"></div>
+    <p>Select everything that applies — this helps us create a personalized review for you.</p>
+    <div class="tag-group-label">Quality & Feel</div>
+    <div class="tags-grid">
+      <div class="tag" onclick="toggleTag(this)" data-tag="Build quality">Build quality</div>
+      <div class="tag" onclick="toggleTag(this)" data-tag="True to size">True to size</div>
+      <div class="tag" onclick="toggleTag(this)" data-tag="Good packaging">Good packaging</div>
+    </div>
+    <div class="tag-group-label">Appearance</div>
+    <div class="tags-grid">
+      <div class="tag" onclick="toggleTag(this)" data-tag="Beautiful finish">Beautiful finish</div>
+      <div class="tag" onclick="toggleTag(this)" data-tag="Premium feel">Premium feel</div>
+    </div>
+    <div class="tag-group-label">Usage</div>
+    <div class="tags-grid">
+      <div class="tag" onclick="toggleTag(this)" data-tag="Easy to clean">Easy to clean</div>
+      <div class="tag" onclick="toggleTag(this)" data-tag="Stable on counter">Stable on counter</div>
+      <div class="tag" onclick="toggleTag(this)" data-tag="Juice groove">Juice groove</div>
+    </div>
+    <div class="tag-group-label">Value</div>
+    <div class="tags-grid">
+      <div class="tag" onclick="toggleTag(this)" data-tag="Worth every penny">Worth every penny</div>
+      <div class="tag" onclick="toggleTag(this)" data-tag="Better than expected">Better than expected</div>
+    </div>
+    <div class="error-msg" id="tags-error">Please select at least 2 tags to continue.</div>
+    <button class="btn-primary" style="margin-top:20px" onclick="generateReview()">Generate My Review</button>
+  </div>
+
+  <!-- STEP 4: Review + Amazon -->
+  <div class="step" id="step-4">
+    <h2>Your personalized review is ready.</h2>
+    <div class="divider"></div>
+    <p>Copy it and paste it on Amazon — it only takes a moment and means the world to us.</p>
+    <div class="review-box" id="review-text"><div class="loading">Crafting your review...</div></div>
+    <button class="copy-btn" onclick="copyReview()">Copy Review</button>
+    <a class="amazon-btn" href="https://www.amazon.com/review/create-review?asin=B0H85CMXNN" target="_blank" onclick="trackAmazonClick()">Leave Your Review on Amazon →</a>
+    <p class="small-note">Your cookbook will appear below after clicking the Amazon button.</p>
+    <div id="cookbook-reveal" style="display:none; margin-top:20px; text-align:center;">
+      <p style="color:var(--green-dark); font-size:15px; margin-bottom:4px;">Your cookbook is ready!</p>
+      <a href="https://cookbook.plakahome.com" target="_blank" class="cookbook-btn">Open PLAKA's Mediterranean Cookbook</a>
+    </div>
+  </div>
+
+  <!-- STEP UNHAPPY -->
+  <div class="step" id="step-unhappy">
+    <h2>We're sorry to hear that.</h2>
+    <div class="divider"></div>
+    <p>Your experience matters to us. Let us make it right — our team is ready to help.</p>
+    <a class="btn-primary" style="display:block;text-align:center;text-decoration:none;padding:15px;" href="mailto:hello@plakahome.com?subject=PLAKA Support Request">Contact Our Team</a>
+    <div style="margin-top:24px;padding-top:20px;border-top:1px solid var(--parchment);">
+      <p style="font-size:14px;">In the meantime, your complimentary cookbook is still yours:</p>
+      <a href="https://cookbook.plakahome.com" target="_blank" class="cookbook-btn">Open PLAKA's Mediterranean Cookbook</a>
+    </div>
+  </div>
+</div>
+
+<script>
+const SHEET_URL = 'REPLACE_WITH_APPS_SCRIPT_URL';
+const MAILERLITE_API = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI0IiwianRpIjoiMjcxNzBiZWIxMzgxZGU1OWViZDFmMjJlMTg3ZWQxNTM2ZmQzNDlhYTVlZTdmZDAwYjE0M2ZkNTExMWZjNWQyZjExZDFjNDYyOTMxNWUyMDIiLCJpYXQiOjE3ODMxMTUyMTMuODE2NzE1LCJuYmYiOjE3ODMxMTUyMTMuODE2NzE5LCJleHAiOjQ5Mzg3ODg4MTMuODExMTk0LCJzdWIiOiIyNTA2MDgxIiwic2NvcGVzIjpbXX0.KdzqmVPyAmy2pFGXeUrUFjVDflW0PuU1Piw3peeTpBMxzlDFKUj_J34zAxqlSDcA85d-oO1kED-5exiwP9Sf2Lyylxwy0QGiz_1ymzdrbFEAQ8NI5OLjMhbFiwXaX6n7JoZz_h5QnC_Xh1C1u2k8jn2y8GqWqHlAMYQZER_b__WvIZjlgk_GcAH3BUSyY9gBbenjbyMhFjn39uVFzKGErxi9zydWsLOZctFN8o26NOLzhUCZ4LlNOHGsPm4oyMb_u5C7x7-qoqF6h4Sf77TA1mdhtkmZW59WvS7usoDIQEiv75UHif6MKWpBKzS5tEs5hzyvg0bTp0k0-5yenLrluAdPVO8gGdT6kkLNdY3izNOgDnV8SPACaiNPVX-t15KBfkPnN5NpuDEf7ZqIoXyK98rFZ1nEtkMJ-EerE460Z4uWMdFNTxFDTfcELCUH9av_7BHdOFTqRh_BgFE5Q8-OdoklXk8hJCBByX-vpEy5IA5CTzXWf8H5iaBya91X6KtYS33szjmyv54y9H9GRmN2Cs7jhKszThX5R8D6qtqRhgPlvUk_LBJKXH80pz-oCBKA6Emhnbjv5nSyrQ8PJ3UQyrR6xshGJL4Vxv5IO5sJIsUyhLm-Fqir1HSi3Wx087UXfxnvfNLypbD9t5mNQV4CkUzoYAtpm5ccl8zblEGKw6U';
+const MAILERLITE_GROUP = '19201034934S652191';
+const PRODUCT = 'Plaka';
+
+let sessionId = 'S' + Date.now() + Math.random().toString(36).substr(2,5);
+let userEmail = '';
+let userRating = 0;
+let selectedTags = [];
+
+function track(event) {
+  const payload = { timestamp: new Date().toISOString(), product: PRODUCT, event, sessionId, email: userEmail, rating: userRating, tags: selectedTags.join(', '), userAgent: navigator.userAgent };
+  if (SHEET_URL !== 'https://script.google.com/macros/s/AKfycbzyttSqGdtYUR-4-_UmSRDto3Awp18pS5y48wCFhPk5HzvECkPCoN2CHbuaZsrY5p-N/exec') {
+    fetch(SHEET_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }).catch(() => {});
+  }
+}
+
+function updateProgress(step) {
+  for (let i = 1; i <= 4; i++) {
+    const dot = document.getElementById('dot-' + i);
+    if (!dot) continue;
+    if (i < step) dot.className = 'progress-dot done';
+    else if (i === step) dot.className = 'progress-dot active';
+    else dot.className = 'progress-dot';
+  }
+}
+
+function showStep(id) {
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+track('qr_scan');
+
+function submitEmail() {
+  const input = document.getElementById('email-input');
+  const err = document.getElementById('email-error');
+  const email = input.value.trim();
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { err.style.display = 'block'; return; }
+  err.style.display = 'none';
+  userEmail = email;
+  if (MAILERLITE_API !== 'REPLACE_WITH_MAILERLITE_API_KEY') {
+    fetch('https://connect.mailerlite.com/api/subscribers', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + MAILERLITE_API },
+      body: JSON.stringify({ email, groups: [MAILERLITE_GROUP] })
+    }).catch(() => {});
+  }
+  track('email_captured');
+  updateProgress(2);
+  showStep('step-2');
+}
+
+function setRating(n) {
+  userRating = n;
+  document.querySelectorAll('.star').forEach((s, i) => s.classList.toggle('active', i < n));
+  document.getElementById('rating-error').style.display = 'none';
+  setTimeout(() => {
+    track('rating_selected');
+    if (n >= 4) { updateProgress(3); showStep('step-3'); }
+    else { track('unhappy_path'); document.getElementById('progress').style.display = 'none'; showStep('step-unhappy'); }
+  }, 400);
+}
+
+function toggleTag(el) {
+  el.classList.toggle('selected');
+  selectedTags = Array.from(document.querySelectorAll('.tag.selected')).map(t => t.dataset.tag);
+}
+
+async function generateReview() {
+  if (selectedTags.length < 2) { document.getElementById('tags-error').style.display = 'block'; return; }
+  document.getElementById('tags-error').style.display = 'none';
+  track('tags_selected');
+  updateProgress(4);
+  showStep('step-4');
+  const tagList = selectedTags.join(', ');
+  const prompt = `Write a genuine, warm Amazon customer review for a stainless steel cutting board called PLAKA. The customer highlighted these positive aspects: ${tagList}. Write in first person, 3-4 sentences, natural and conversational. Do not use excessive exclamation marks. Do not mention being asked to write a review. Write only the review text, no title.`;
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: 'claude-sonnet-4-6', max_tokens: 1000, messages: [{ role: 'user', content: prompt }] })
+    });
+    const data = await res.json();
+    document.getElementById('review-text').textContent = data.content?.[0]?.text || fallback(selectedTags);
+  } catch(e) {
+    document.getElementById('review-text').textContent = fallback(selectedTags);
+  }
+}
+
+function fallback(tags) {
+  const map = { 'Build quality':'incredibly well built','True to size':'exactly the size described','Good packaging':'beautifully packaged','Beautiful finish':'stunning finish','Premium feel':'premium quality feel','Easy to clean':'so easy to clean','Stable on counter':'stays perfectly stable on the counter','Juice groove':'a great juice groove','Worth every penny':'worth every penny','Better than expected':'exceeded my expectations' };
+  const phrases = tags.map(t => map[t] || t).join(', ');
+  return `I've been using the PLAKA cutting board for a few weeks and I'm genuinely impressed. It's ${phrases} — everything about it feels intentional and high quality. It looks great on my counter and has become a daily staple in my kitchen. Highly recommend it to anyone looking for a cutting board that actually lasts.`;
+}
+
+function copyReview() {
+  const text = document.getElementById('review-text').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector('.copy-btn');
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy Review', 2000);
+    track('review_copied');
+  });
+}
+
+function trackAmazonClick() {
+  track('amazon_click');
+  document.getElementById('cookbook-reveal').style.display = 'block';
+}
+</script>
+</body>
+</html>
