@@ -469,7 +469,7 @@ function submitEmail() {
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { err.style.display = 'block'; return; }
   err.style.display = 'none';
   userEmail = email;
-  if (MAILERLITE_API !== 'REPLACE_WITH_MAILERLITE_API_KEY') {
+  if (MAILERLITE_API !== '') {
     fetch('https://connect.mailerlite.com/api/subscribers', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + MAILERLITE_API },
