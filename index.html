@@ -506,7 +506,7 @@ async function generateReview() {
   document.getElementById('review-text').value = 'Crafting your review...';
 
   const tagList = selectedTags.join(', ');
-  const prompt = ;
+  const prompt = "Write a genuine Amazon customer review for the PLAKA stainless steel cutting board. The customer highlighted these aspects: " + tagList + ". Rules: write in first person, 3-4 sentences, natural and conversational tone, no exclamation marks, do not mention how long they have had the product or any time reference, do not say you were asked to write a review, write only the review text with no title, base the review only on the provided tags.";
 
   try {
     const res = await fetch('https://api.anthropic.com/v1/messages', {
